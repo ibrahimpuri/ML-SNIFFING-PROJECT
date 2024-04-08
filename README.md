@@ -1,0 +1,2 @@
+# ML SNIFFING PROJECT
+ This project focuses on detecting anomalies in network traffic using machine learning techniques. By capturing and analyzing network packets, we aim to identify unusual patterns that could indicate security threats, performance issues, or other noteworthy events. The core of this project utilizes the Isolation Forest algorithm for anomaly detection, providing a foundation for further exploration and enhancement.
