@@ -27,8 +27,6 @@ print(df['protocol'].value_counts())
 # Boxplot for packet length can help identify outliers
 df.boxplot(column=['length'])
 
-import pandas as pd
-
 # Assuming 'timestamp' is in UNIX time format
 df['timestamp'] = pd.to_datetime(df['timestamp'], unit='s')
 

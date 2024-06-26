@@ -2,7 +2,7 @@ from scapy.all import sniff, IP
 import pandas as pd
 
 # Replace 'en0' with the interface you identified using ifconfig
-INTERFACE = 'en0'
+INTERFACE = 'eno'
 
 packets_data = []  # List to store packet info
 
