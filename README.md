@@ -1,56 +1,69 @@
-Network Traffic Anomaly Detection
-Detect anomalies within network traffic through sophisticated machine learning techniques. Utilizing the power of packet sniffing combined with the Isolation Forest algorithm, this project aims to uncover hidden threats and ensure network integrity.
+# Network Traffic Anomaly Detection
 
-About The Project
-In the vast streams of network traffic, anomalies can signify various issues, from security breaches to system malfunctions. This project seeks to automate the detection of such anomalies, providing a first line of defense against potential threats. By analyzing captured network packets and employing machine learning, we strive to identify unusual patterns indicative of underlying problems.
+Detect anomalies within network traffic through machine learning techniques. This project provides tooling to capture packets,
+engineer features and run both unsupervised anomaly detection and supervised classification experiments.
 
-Built With
-Python 3: The primary programming language used.
-Scapy: For packet capturing and manipulation.
-Pandas & NumPy: For data manipulation and numerical operations.
-Scikit-learn: For implementing the Isolation Forest algorithm.
-Getting Started
-To get a local copy up and running follow these simple steps.
+## Getting Started
 
-Prerequisites
-Ensure you have Python 3 installed on your system. The following additional libraries are required:
-scapy
-pandas
-numpy
-scikit-learn
+### Prerequisites
 
-Installation
+Ensure you have Python 3.9 or later installed. Install project dependencies using pip:
 
-Clone the repository:
-git clone https://github.com/yourusername/network-traffic-anomaly-detection.git
-Install Python packages:
+```bash
 pip install -r requirements.txt
-Usage
-Follow these steps to capture network packets, preprocess the data, and run the anomaly detection model:
+```
 
-Capture Network Packets:
+### Capturing Packets
 
+Packet capture requires root/administrator privileges and an available network interface. Use the CLI to capture packets to a
+CSV file:
 
-Copy code
-python packet_sniffer.py
-Adjust the script to specify the network interface and other parameters as needed.
+```bash
+python -m ml_sniffing.cli sniff captured_packets.csv --interface eth0 --packet-count 500
+```
 
-Data Preprocessing:
-Process the captured data to format it suitably for machine learning analysis.
+Omit `--packet-count` to keep sniffing until interrupted with `CTRL+C`.
 
-Depending which model you want, run the according file:
-For Anomaly Detection run the Isolation Forest Model which is as name: isolationforestmodel.py
-For Network analysis and Classification run the Random Classifier Model file: randomclassifiermodel.py
+### Detecting Anomalies
 
+Run the Isolation Forest detector on a CSV of captured packets:
 
-Contributing
-Contributions make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+```bash
+python -m ml_sniffing.cli detect captured_packets.csv --top-n 5 --output anomalies.csv
+```
 
-Fork the Project
-Create your Feature Branch (git checkout -b feature/AmazingFeature)
-Commit your Changes (git commit -m 'Add some AmazingFeature')
-Push to the Branch (git push origin feature/AmazingFeature)
-Open a Pull Request
-License
-Distributed under the MIT License. See LICENSE for more information.
+The command prints the most anomalous packets and optionally stores all anomaly scores in `anomalies.csv`.
 
+### Training a Classifier
+
+If you have a labelled dataset (for example with a column named `is_malicious`), train and evaluate a Random Forest classifier:
+
+```bash
+python -m ml_sniffing.cli classify captured_packets.csv --label-column is_malicious
+```
+
+The script prints accuracy, macro-averaged metrics, a detailed classification report and the confusion matrix.
+
+## Project Structure
+
+- `ml_sniffing/cli.py` – user-facing command line interface
+- `ml_sniffing/sniffer.py` – packet capture helpers built on top of Scapy
+- `ml_sniffing/data.py` – CSV loading and persistence helpers
+- `ml_sniffing/features.py` – feature engineering shared by the models
+- `ml_sniffing/isolation.py` – Isolation Forest anomaly detector utilities
+- `ml_sniffing/classification.py` – Random Forest classifier utilities
+
+## Contributing
+
+Contributions make the open-source community an amazing place to learn, inspire and create. Any contributions you make are
+appreciated.
+
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
